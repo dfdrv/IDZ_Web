@@ -1,0 +1,22 @@
+﻿@model List<IDZ.Models.Entities.Articles>
+
+@{
+    ViewBag.Title = "Словарь";
+}
+
+<h2>Описание</h2>
+
+<table class="table">
+    <tr>
+        <th>Статья</th>
+        <th>Время редактирования</th>
+    </tr>
+    @foreach (var article in Model)
+    {
+        <tr>
+            <td>@article.content</td>
+            <td>@article.last_modified_time</td>
+        </tr>
+    }
+</table>
+@Html.ActionLink("Назад", "WordsList")

@@ -1,0 +1,32 @@
+﻿@model List<IDZ.Models.ViewModels.ArticleHistoryViewModel>
+
+@{
+    ViewBag.Title = "Article History";
+}
+
+<h2>Article History for: @ViewBag.Word</h2>
+
+@if (Model.Count == 0)
+{
+    <p>No edit history found for the specified word.</p>
+}
+else
+{
+    <table class="table">
+        <tr>
+            <th>Edit Content</th>
+            <th>Edit Time</th>
+            <th>Is Applied</th>
+            <!-- Добавьте другие атрибуты истории изменений, если необходимо -->
+        </tr>
+        @foreach (var edit in Model)
+        {
+            <tr>
+                <td>@edit.EditContent</td>
+                <td>@edit.EditTime</td>
+                <td>@(edit.IsApplied ? "Yes" : "No")</td>
+                <!-- Добавьте другие атрибуты истории изменений, если необходимо -->
+            </tr>
+        }
+    </table>
+}

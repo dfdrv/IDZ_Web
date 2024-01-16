@@ -1,0 +1,46 @@
+﻿@model IDZ.Models.Entities.WordDeleteViewModel
+
+@{
+    ViewBag.Title = "Словарь";
+}
+
+<h2>Удаление слова</h2>
+
+<p>
+    Вы уверены что хотите удалить данную статью?
+</p>
+
+
+<table class="table">
+    <tr>
+        <th>Слово</th>
+    </tr>
+    <tr>
+        <td>@Model.Word.word</td>
+    </tr>
+</table>
+
+
+<table class="table">
+    <tr>
+        <th>Статья:</th>
+        <!-- Другие поля статьи -->
+    </tr>
+    @foreach (var article in Model.Articles)
+    {
+        <tr>
+            <td>@article.content</td>
+            <!-- Вставьте другие поля статьи, которые вы хотите отобразить -->
+        </tr>
+    }
+</table>
+
+@using (Html.BeginForm("DeleteWord", "Lab", FormMethod.Post, new { id = Model.Word.word_id }))
+{
+    @Html.AntiForgeryToken()
+    <input type="submit" value="Delete" class="btn btn-danger" />
+}
+
+<div>
+    @Html.ActionLink("Отмена", "WordsList")
+</div>

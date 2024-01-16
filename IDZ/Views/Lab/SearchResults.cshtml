@@ -1,0 +1,28 @@
+﻿@model List<IDZ.Models.Entities.Articles>
+
+@{
+    ViewBag.Title = "Search Results";
+}
+
+<h2>Search Results for: @ViewBag.SearchTerm</h2>
+
+@if (Model.Count == 0)
+{
+    <p>Ни одной статьи по заданному слову не найдено</p>
+}
+else
+{
+    <table class="table">
+        <tr>
+            <th>Content</th>
+          
+        </tr>
+        @foreach (var article in Model)
+        {
+            <tr>
+                <td>@article.content</td>
+               
+            </tr>
+        }
+    </table>
+}

@@ -1,0 +1,694 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Хранилище I11_FedorovDV_IDZModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Articles">
+          <Key>
+            <PropertyRef Name="article_id" />
+          </Key>
+          <Property Name="article_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="word_id" Type="uniqueidentifier" />
+          <Property Name="content" Type="varchar(max)" />
+          <Property Name="last_modified_by" Type="uniqueidentifier" />
+          <Property Name="last_modified_time" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Comments">
+          <Key>
+            <PropertyRef Name="comment_id" />
+          </Key>
+          <Property Name="comment_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="article_id" Type="uniqueidentifier" />
+          <Property Name="user_id" Type="uniqueidentifier" />
+          <Property Name="comment_text" Type="varchar(max)" />
+          <Property Name="comment_time" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Edits">
+          <Key>
+            <PropertyRef Name="edit_id" />
+          </Key>
+          <Property Name="edit_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="article_id" Type="uniqueidentifier" />
+          <Property Name="user_id" Type="uniqueidentifier" />
+          <Property Name="edit_content" Type="varchar(max)" />
+          <Property Name="edit_time" Type="datetime" />
+          <Property Name="is_applied" Type="bit" />
+        </EntityType>
+        <EntityType Name="Moderators">
+          <Key>
+            <PropertyRef Name="moderator_id" />
+          </Key>
+          <Property Name="moderator_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="user_id" Type="uniqueidentifier" />
+          <Property Name="article_id" Type="uniqueidentifier" />
+        </EntityType>
+        <EntityType Name="Ratings">
+          <Key>
+            <PropertyRef Name="rating_id" />
+          </Key>
+          <Property Name="rating_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="article_id" Type="uniqueidentifier" />
+          <Property Name="user_id" Type="uniqueidentifier" />
+          <Property Name="rating_value" Type="int" />
+          <Property Name="rating_time" Type="datetime" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="user_id" />
+          </Key>
+          <Property Name="user_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="username" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="role" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Salt" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="passwordhash" Type="nchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Words">
+          <Key>
+            <PropertyRef Name="word_id" />
+          </Key>
+          <Property Name="word_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="word" Type="varchar" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__Articles__last_m__3F466844">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Articles" Type="Self.Articles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="Articles">
+              <PropertyRef Name="last_modified_by" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Articles__word_i__3E52440B">
+          <End Role="Words" Type="Self.Words" Multiplicity="0..1" />
+          <End Role="Articles" Type="Self.Articles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Words">
+              <PropertyRef Name="word_id" />
+            </Principal>
+            <Dependent Role="Articles">
+              <PropertyRef Name="word_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Comments__articl__4CA06362">
+          <End Role="Articles" Type="Self.Articles" Multiplicity="0..1" />
+          <End Role="Comments" Type="Self.Comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Articles">
+              <PropertyRef Name="article_id" />
+            </Principal>
+            <Dependent Role="Comments">
+              <PropertyRef Name="article_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Comments__user_i__4D94879B">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Comments" Type="Self.Comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="Comments">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Edits__article_i__4316F928">
+          <End Role="Articles" Type="Self.Articles" Multiplicity="0..1" />
+          <End Role="Edits" Type="Self.Edits" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Articles">
+              <PropertyRef Name="article_id" />
+            </Principal>
+            <Dependent Role="Edits">
+              <PropertyRef Name="article_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Edits__user_id__440B1D61">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Edits" Type="Self.Edits" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="Edits">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Moderator__artic__48CFD27E">
+          <End Role="Articles" Type="Self.Articles" Multiplicity="0..1" />
+          <End Role="Moderators" Type="Self.Moderators" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Articles">
+              <PropertyRef Name="article_id" />
+            </Principal>
+            <Dependent Role="Moderators">
+              <PropertyRef Name="article_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Moderator__user___47DBAE45">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Moderators" Type="Self.Moderators" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="Moderators">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Ratings__article__5165187F">
+          <End Role="Articles" Type="Self.Articles" Multiplicity="0..1" />
+          <End Role="Ratings" Type="Self.Ratings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Articles">
+              <PropertyRef Name="article_id" />
+            </Principal>
+            <Dependent Role="Ratings">
+              <PropertyRef Name="article_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Ratings__user_id__52593CB8">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Ratings" Type="Self.Ratings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="Ratings">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Comments_Articles">
+          <End Role="Articles" Type="Self.Articles" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Comments" Type="Self.Comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Articles">
+              <PropertyRef Name="article_id" />
+            </Principal>
+            <Dependent Role="Comments">
+              <PropertyRef Name="article_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Edits_Articles">
+          <End Role="Articles" Type="Self.Articles" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Edits" Type="Self.Edits" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Articles">
+              <PropertyRef Name="article_id" />
+            </Principal>
+            <Dependent Role="Edits">
+              <PropertyRef Name="article_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Ratings_Articles">
+          <End Role="Articles" Type="Self.Articles" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Ratings" Type="Self.Ratings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Articles">
+              <PropertyRef Name="article_id" />
+            </Principal>
+            <Dependent Role="Ratings">
+              <PropertyRef Name="article_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище I11_FedorovDV_IDZModelContainer">
+          <EntitySet Name="Articles" EntityType="Self.Articles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Comments" EntityType="Self.Comments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Edits" EntityType="Self.Edits" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Moderators" EntityType="Self.Moderators" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Ratings" EntityType="Self.Ratings" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Words" EntityType="Self.Words" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Articles__last_m__3F466844" Association="Self.FK__Articles__last_m__3F466844">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Articles" EntitySet="Articles" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Articles__word_i__3E52440B" Association="Self.FK__Articles__word_i__3E52440B">
+            <End Role="Words" EntitySet="Words" />
+            <End Role="Articles" EntitySet="Articles" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Comments__articl__4CA06362" Association="Self.FK__Comments__articl__4CA06362">
+            <End Role="Articles" EntitySet="Articles" />
+            <End Role="Comments" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Comments__user_i__4D94879B" Association="Self.FK__Comments__user_i__4D94879B">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Comments" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Edits__article_i__4316F928" Association="Self.FK__Edits__article_i__4316F928">
+            <End Role="Articles" EntitySet="Articles" />
+            <End Role="Edits" EntitySet="Edits" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Edits__user_id__440B1D61" Association="Self.FK__Edits__user_id__440B1D61">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Edits" EntitySet="Edits" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Moderator__artic__48CFD27E" Association="Self.FK__Moderator__artic__48CFD27E">
+            <End Role="Articles" EntitySet="Articles" />
+            <End Role="Moderators" EntitySet="Moderators" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Moderator__user___47DBAE45" Association="Self.FK__Moderator__user___47DBAE45">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Moderators" EntitySet="Moderators" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Ratings__article__5165187F" Association="Self.FK__Ratings__article__5165187F">
+            <End Role="Articles" EntitySet="Articles" />
+            <End Role="Ratings" EntitySet="Ratings" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Ratings__user_id__52593CB8" Association="Self.FK__Ratings__user_id__52593CB8">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Ratings" EntitySet="Ratings" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Comments_Articles" Association="Self.FK_Comments_Articles">
+            <End Role="Articles" EntitySet="Articles" />
+            <End Role="Comments" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Edits_Articles" Association="Self.FK_Edits_Articles">
+            <End Role="Articles" EntitySet="Articles" />
+            <End Role="Edits" EntitySet="Edits" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Ratings_Articles" Association="Self.FK_Ratings_Articles">
+            <End Role="Articles" EntitySet="Articles" />
+            <End Role="Ratings" EntitySet="Ratings" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="I11_FedorovDV_IDZModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Articles">
+          <Key>
+            <PropertyRef Name="article_id" />
+          </Key>
+          <Property Name="article_id" Type="Guid" Nullable="false" />
+          <Property Name="word_id" Type="Guid" />
+          <Property Name="content" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="last_modified_by" Type="Guid" />
+          <Property Name="last_modified_time" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Users" Relationship="Self.FK__Articles__last_m__3F466844" FromRole="Articles" ToRole="Users" />
+          <NavigationProperty Name="Words" Relationship="Self.FK__Articles__word_i__3E52440B" FromRole="Articles" ToRole="Words" />
+          <NavigationProperty Name="Comments" Relationship="Self.FK__Comments__articl__4CA06362" FromRole="Articles" ToRole="Comments" />
+          <NavigationProperty Name="Edits" Relationship="Self.FK__Edits__article_i__4316F928" FromRole="Articles" ToRole="Edits" />
+          <NavigationProperty Name="Moderators" Relationship="Self.FK__Moderator__artic__48CFD27E" FromRole="Articles" ToRole="Moderators" />
+          <NavigationProperty Name="Ratings" Relationship="Self.FK__Ratings__article__5165187F" FromRole="Articles" ToRole="Ratings" />
+        </EntityType>
+        <EntityType Name="Comments">
+          <Key>
+            <PropertyRef Name="comment_id" />
+          </Key>
+          <Property Name="comment_id" Type="Guid" Nullable="false" />
+          <Property Name="article_id" Type="Guid" />
+          <Property Name="user_id" Type="Guid" />
+          <Property Name="comment_text" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="comment_time" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Articles" Relationship="Self.FK__Comments__articl__4CA06362" FromRole="Comments" ToRole="Articles" />
+          <NavigationProperty Name="Users" Relationship="Self.FK__Comments__user_i__4D94879B" FromRole="Comments" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="Edits">
+          <Key>
+            <PropertyRef Name="edit_id" />
+          </Key>
+          <Property Name="edit_id" Type="Guid" Nullable="false" />
+          <Property Name="article_id" Type="Guid" />
+          <Property Name="user_id" Type="Guid" />
+          <Property Name="edit_content" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="edit_time" Type="DateTime" Precision="3" />
+          <Property Name="is_applied" Type="Boolean" />
+          <NavigationProperty Name="Articles" Relationship="Self.FK__Edits__article_i__4316F928" FromRole="Edits" ToRole="Articles" />
+          <NavigationProperty Name="Users" Relationship="Self.FK__Edits__user_id__440B1D61" FromRole="Edits" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="Moderators">
+          <Key>
+            <PropertyRef Name="moderator_id" />
+          </Key>
+          <Property Name="moderator_id" Type="Guid" Nullable="false" />
+          <Property Name="user_id" Type="Guid" />
+          <Property Name="article_id" Type="Guid" />
+          <NavigationProperty Name="Articles" Relationship="Self.FK__Moderator__artic__48CFD27E" FromRole="Moderators" ToRole="Articles" />
+          <NavigationProperty Name="Users" Relationship="Self.FK__Moderator__user___47DBAE45" FromRole="Moderators" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="Ratings">
+          <Key>
+            <PropertyRef Name="rating_id" />
+          </Key>
+          <Property Name="rating_id" Type="Guid" Nullable="false" />
+          <Property Name="article_id" Type="Guid" />
+          <Property Name="user_id" Type="Guid" />
+          <Property Name="rating_value" Type="Int32" />
+          <Property Name="rating_time" Type="DateTime" Precision="3" />
+          <NavigationProperty Name="Articles" Relationship="Self.FK__Ratings__article__5165187F" FromRole="Ratings" ToRole="Articles" />
+          <NavigationProperty Name="Users" Relationship="Self.FK__Ratings__user_id__52593CB8" FromRole="Ratings" ToRole="Users" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="user_id" />
+          </Key>
+          <Property Name="user_id" Type="Guid" Nullable="false" />
+          <Property Name="username" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="role" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Salt" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="Articles" Relationship="Self.FK__Articles__last_m__3F466844" FromRole="Users" ToRole="Articles" />
+          <NavigationProperty Name="Comments" Relationship="Self.FK__Comments__user_i__4D94879B" FromRole="Users" ToRole="Comments" />
+          <NavigationProperty Name="Edits" Relationship="Self.FK__Edits__user_id__440B1D61" FromRole="Users" ToRole="Edits" />
+          <NavigationProperty Name="Moderators" Relationship="Self.FK__Moderator__user___47DBAE45" FromRole="Users" ToRole="Moderators" />
+          <NavigationProperty Name="Ratings" Relationship="Self.FK__Ratings__user_id__52593CB8" FromRole="Users" ToRole="Ratings" />
+          <Property Name="passwordhash" Type="String" MaxLength="255" FixedLength="true" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Words">
+          <Key>
+            <PropertyRef Name="word_id" />
+          </Key>
+          <Property Name="word_id" Type="Guid" Nullable="false" />
+          <Property Name="word" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Articles" Relationship="Self.FK__Articles__word_i__3E52440B" FromRole="Words" ToRole="Articles" />
+        </EntityType>
+        <Association Name="FK__Articles__last_m__3F466844">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Articles" Type="Self.Articles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="Articles">
+              <PropertyRef Name="last_modified_by" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Articles__word_i__3E52440B">
+          <End Role="Words" Type="Self.Words" Multiplicity="0..1" />
+          <End Role="Articles" Type="Self.Articles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Words">
+              <PropertyRef Name="word_id" />
+            </Principal>
+            <Dependent Role="Articles">
+              <PropertyRef Name="word_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Comments__articl__4CA06362">
+          <End Role="Articles" Type="Self.Articles" Multiplicity="0..1" />
+          <End Role="Comments" Type="Self.Comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Articles">
+              <PropertyRef Name="article_id" />
+            </Principal>
+            <Dependent Role="Comments">
+              <PropertyRef Name="article_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Edits__article_i__4316F928">
+          <End Role="Articles" Type="Self.Articles" Multiplicity="0..1" />
+          <End Role="Edits" Type="Self.Edits" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Articles">
+              <PropertyRef Name="article_id" />
+            </Principal>
+            <Dependent Role="Edits">
+              <PropertyRef Name="article_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Moderator__artic__48CFD27E">
+          <End Role="Articles" Type="Self.Articles" Multiplicity="0..1" />
+          <End Role="Moderators" Type="Self.Moderators" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Articles">
+              <PropertyRef Name="article_id" />
+            </Principal>
+            <Dependent Role="Moderators">
+              <PropertyRef Name="article_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Ratings__article__5165187F">
+          <End Role="Articles" Type="Self.Articles" Multiplicity="0..1" />
+          <End Role="Ratings" Type="Self.Ratings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Articles">
+              <PropertyRef Name="article_id" />
+            </Principal>
+            <Dependent Role="Ratings">
+              <PropertyRef Name="article_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Comments__user_i__4D94879B">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Comments" Type="Self.Comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="Comments">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Edits__user_id__440B1D61">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Edits" Type="Self.Edits" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="Edits">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Moderator__user___47DBAE45">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Moderators" Type="Self.Moderators" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="Moderators">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Ratings__user_id__52593CB8">
+          <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+          <End Role="Ratings" Type="Self.Ratings" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="user_id" />
+            </Principal>
+            <Dependent Role="Ratings">
+              <PropertyRef Name="user_id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Articles" EntityType="Self.Articles" />
+          <EntitySet Name="Comments" EntityType="Self.Comments" />
+          <EntitySet Name="Edits" EntityType="Self.Edits" />
+          <EntitySet Name="Moderators" EntityType="Self.Moderators" />
+          <EntitySet Name="Ratings" EntityType="Self.Ratings" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="Users" EntityType="Self.Users" />
+          <EntitySet Name="Words" EntityType="Self.Words" />
+          <AssociationSet Name="FK__Articles__last_m__3F466844" Association="Self.FK__Articles__last_m__3F466844">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Articles" EntitySet="Articles" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Articles__word_i__3E52440B" Association="Self.FK__Articles__word_i__3E52440B">
+            <End Role="Words" EntitySet="Words" />
+            <End Role="Articles" EntitySet="Articles" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Comments__articl__4CA06362" Association="Self.FK__Comments__articl__4CA06362">
+            <End Role="Articles" EntitySet="Articles" />
+            <End Role="Comments" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Edits__article_i__4316F928" Association="Self.FK__Edits__article_i__4316F928">
+            <End Role="Articles" EntitySet="Articles" />
+            <End Role="Edits" EntitySet="Edits" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Moderator__artic__48CFD27E" Association="Self.FK__Moderator__artic__48CFD27E">
+            <End Role="Articles" EntitySet="Articles" />
+            <End Role="Moderators" EntitySet="Moderators" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Ratings__article__5165187F" Association="Self.FK__Ratings__article__5165187F">
+            <End Role="Articles" EntitySet="Articles" />
+            <End Role="Ratings" EntitySet="Ratings" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Comments__user_i__4D94879B" Association="Self.FK__Comments__user_i__4D94879B">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Comments" EntitySet="Comments" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Edits__user_id__440B1D61" Association="Self.FK__Edits__user_id__440B1D61">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Edits" EntitySet="Edits" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Moderator__user___47DBAE45" Association="Self.FK__Moderator__user___47DBAE45">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Moderators" EntitySet="Moderators" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Ratings__user_id__52593CB8" Association="Self.FK__Ratings__user_id__52593CB8">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="Ratings" EntitySet="Ratings" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище I11_FedorovDV_IDZModelContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="Articles">
+            <EntityTypeMapping TypeName="I11_FedorovDV_IDZModel.Articles">
+              <MappingFragment StoreEntitySet="Articles">
+                <ScalarProperty Name="article_id" ColumnName="article_id" />
+                <ScalarProperty Name="word_id" ColumnName="word_id" />
+                <ScalarProperty Name="content" ColumnName="content" />
+                <ScalarProperty Name="last_modified_by" ColumnName="last_modified_by" />
+                <ScalarProperty Name="last_modified_time" ColumnName="last_modified_time" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Comments">
+            <EntityTypeMapping TypeName="I11_FedorovDV_IDZModel.Comments">
+              <MappingFragment StoreEntitySet="Comments">
+                <ScalarProperty Name="comment_id" ColumnName="comment_id" />
+                <ScalarProperty Name="article_id" ColumnName="article_id" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="comment_text" ColumnName="comment_text" />
+                <ScalarProperty Name="comment_time" ColumnName="comment_time" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Edits">
+            <EntityTypeMapping TypeName="I11_FedorovDV_IDZModel.Edits">
+              <MappingFragment StoreEntitySet="Edits">
+                <ScalarProperty Name="edit_id" ColumnName="edit_id" />
+                <ScalarProperty Name="article_id" ColumnName="article_id" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="edit_content" ColumnName="edit_content" />
+                <ScalarProperty Name="edit_time" ColumnName="edit_time" />
+                <ScalarProperty Name="is_applied" ColumnName="is_applied" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Moderators">
+            <EntityTypeMapping TypeName="I11_FedorovDV_IDZModel.Moderators">
+              <MappingFragment StoreEntitySet="Moderators">
+                <ScalarProperty Name="moderator_id" ColumnName="moderator_id" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="article_id" ColumnName="article_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Ratings">
+            <EntityTypeMapping TypeName="I11_FedorovDV_IDZModel.Ratings">
+              <MappingFragment StoreEntitySet="Ratings">
+                <ScalarProperty Name="rating_id" ColumnName="rating_id" />
+                <ScalarProperty Name="article_id" ColumnName="article_id" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="rating_value" ColumnName="rating_value" />
+                <ScalarProperty Name="rating_time" ColumnName="rating_time" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="I11_FedorovDV_IDZModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="I11_FedorovDV_IDZModel.Users">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="Salt" ColumnName="Salt" />
+                <ScalarProperty Name="passwordhash" ColumnName="passwordhash" />
+                <ScalarProperty Name="user_id" ColumnName="user_id" />
+                <ScalarProperty Name="username" ColumnName="username" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="role" ColumnName="role" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Words">
+            <EntityTypeMapping TypeName="I11_FedorovDV_IDZModel.Words">
+              <MappingFragment StoreEntitySet="Words">
+                <ScalarProperty Name="word_id" ColumnName="word_id" />
+                <ScalarProperty Name="word" ColumnName="word" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

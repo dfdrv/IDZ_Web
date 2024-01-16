@@ -1,0 +1,42 @@
+﻿@model List<IDZ.Models.Entities.Words>
+
+@{
+    ViewBag.Title = "Словарь";
+}
+
+<h2>Словарь</h2>
+@Html.ActionLink("Создать новую статью", "CreateWord")
+<table class="table">
+    <tr>
+        <th>Список</th>
+        <th>Функции</th>
+    </tr>
+    @foreach (var word in Model)
+    {
+        <tr>
+            <td>@word.word</td>
+            <td>
+                @Html.ActionLink("Детали", "WordDetails", new { id = word.word_id })
+                @Html.Raw("|")
+                @Html.ActionLink("Редактирование", "EditWord", new { id = word.word_id })
+                @Html.Raw("|")
+
+                @if (User.IsInRole("moderator"))
+                {
+
+                    @Html.ActionLink("Удаление", "DeleteWord", new { id = word.word_id })
+                    @Html.Raw("|")
+                    @Html.ActionLink("История изменений", "ArticleHistory", new { wordId = word.word_id })
+                }
+            </td>
+        </tr>
+    }
+</table>
+@using (Html.BeginForm("SearchArticleByWord", "Lab", FormMethod.Get))
+{
+    <div class="form-group">
+        @Html.Label("Поиск статьи по слову:")
+        @Html.TextBox("searchTerm", null, new { @class = "form-control" })
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+}
